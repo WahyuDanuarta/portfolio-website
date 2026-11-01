@@ -1,0 +1,45 @@
+# ==============================================================================
+# Security Hardening Configuration - Wahyu Danuarta Portfolio
+# ==============================================================================
+
+# 1. Disable Directory Listing (Prevent browsing file tree structure)
+Options -Indexes
+
+# 2. Hide Server Signature & Version Information
+ServerSignature Off
+
+# 3. Block Direct Access to Hidden / Sensitive Files (.git, .env, .htaccess, etc.)
+<FilesMatch "^\.">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# 4. HTTP Defensive Security Headers (OWASP Recommended)
+<IfModule mod_headers.c>
+    # Prevent MIME-type sniffing
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Prevent Clickjacking (disallow embedding inside frames/iframes)
+    Header always set X-Frame-Options "DENY"
+
+    # Referrer Policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Restrict unnecessary browser capabilities
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+
+    # Cross-Origin Policies
+    Header always set Cross-Origin-Opener-Policy "same-origin"
+
+    # Content-Security-Policy (Allow local assets, Google Fonts, and FontAwesome CDN)
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
+</IfModule>
+
+# 5. Default Charset Enforcement
+AddDefaultCharset UTF-8
+
