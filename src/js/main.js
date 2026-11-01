@@ -311,4 +311,20 @@ class SecurityHardeningMiddleware
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');
   }
+
+  // 7. Dynamic Tab Title on Inactive State (Page Visibility API)
+  const defaultPageTitle = document.title;
+  let titleTimeout = null;
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      document.title = '👋 Jangan lupa kembali! | Wahyu.dev';
+    } else {
+      document.title = '⚡ Wahyu Danuarta kembali online!';
+      clearTimeout(titleTimeout);
+      titleTimeout = setTimeout(() => {
+        document.title = defaultPageTitle;
+      }, 2000);
+    }
+  });
 });
